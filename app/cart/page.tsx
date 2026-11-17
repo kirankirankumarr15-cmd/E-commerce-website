@@ -47,9 +47,8 @@ export default function CartPage() {
             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs">
               <div className="flex items-center gap-2 mb-2">
                 <CheckCircle2
-                  className={`h-5 w-5 ${
-                    isFreeDelivery ? "text-green-600" : "text-amber-500"
-                  }`}
+                  className={`h-5 w-5 ${isFreeDelivery ? "text-green-600" : "text-amber-500"
+                    }`}
                 />
                 <span className="text-xs sm:text-sm font-bold text-gray-900">
                   {isFreeDelivery ? (
@@ -69,9 +68,8 @@ export default function CartPage() {
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div
-                  className={`h-2 rounded-full transition-all duration-500 ${
-                    isFreeDelivery ? "bg-green-600" : "bg-amber-500"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-500 ${isFreeDelivery ? "bg-green-600" : "bg-amber-500"
+                    }`}
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -173,7 +171,7 @@ export default function CartPage() {
                                 if (quantity <= 1) {
                                   removeFromCart(product.id);
                                 } else {
-                                updateQuantity(product.id, quantity - 1);
+                                  updateQuantity(product.id, quantity - 1);
                                 }
                               }}
                               className="px-2.5 py-1.5 hover:bg-gray-200 text-gray-700 transition cursor-pointer"

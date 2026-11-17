@@ -22,14 +22,15 @@ export const FALLBACK_PRODUCTS = [
     category: { _id: 'c1', name: 'Electronics', slug: 'electronics' },
     category_slug: 'electronics',
     brand: 'Nova Audio',
-    images: [{ url: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&fit=crop' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800&fit=crop', type: 'main' }],
     stock: 120,
-    rating: { average: 4.8, count: 432 },
+    rating: 4.8,
     numReviews: 432,
     isDeal: true,
     isBestSeller: true,
     isNewArrival: false,
     isFeatured: true,
+    isTrending: true,
   },
   {
     _id: 'p2',
@@ -45,14 +46,15 @@ export const FALLBACK_PRODUCTS = [
     category: { _id: 'c1', name: 'Electronics', slug: 'electronics' },
     category_slug: 'electronics',
     brand: 'Apex Tech',
-    images: [{ url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&fit=crop' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&fit=crop', type: 'main' }],
     stock: 85,
-    rating: { average: 4.7, count: 289 },
+    rating: 4.7,
     numReviews: 289,
     isDeal: true,
     isBestSeller: true,
     isNewArrival: false,
     isFeatured: true,
+    isTrending: true,
   },
   {
     _id: 'p3',
@@ -68,14 +70,15 @@ export const FALLBACK_PRODUCTS = [
     category: { _id: 'c1', name: 'Electronics', slug: 'electronics' },
     category_slug: 'electronics',
     brand: 'VoltStream',
-    images: [{ url: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&fit=crop' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&fit=crop', type: 'main' }],
     stock: 200,
-    rating: { average: 4.9, count: 512 },
+    rating: 4.9,
     numReviews: 512,
     isDeal: false,
-    isBestSeller: false,
+    isBestSeller: true,
     isNewArrival: true,
     isFeatured: true,
+    isTrending: false,
   },
   {
     _id: 'p4',
@@ -91,14 +94,15 @@ export const FALLBACK_PRODUCTS = [
     category: { _id: 'c1', name: 'Electronics', slug: 'electronics' },
     category_slug: 'electronics',
     brand: 'Nova Audio',
-    images: [{ url: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&fit=crop' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=800&fit=crop', type: 'main' }],
     stock: 65,
-    rating: { average: 4.6, count: 178 },
+    rating: 4.6,
     numReviews: 178,
     isDeal: true,
     isBestSeller: true,
     isNewArrival: false,
     isFeatured: false,
+    isTrending: true,
   },
   {
     _id: 'p5',
@@ -114,14 +118,15 @@ export const FALLBACK_PRODUCTS = [
     category: { _id: 'c2', name: 'Fashion', slug: 'fashion' },
     category_slug: 'fashion',
     brand: 'Aura Cotton',
-    images: [{ url: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&fit=crop' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&fit=crop', type: 'main' }],
     stock: 90,
-    rating: { average: 4.6, count: 320 },
+    rating: 4.6,
     numReviews: 320,
     isDeal: true,
     isBestSeller: true,
     isNewArrival: false,
     isFeatured: true,
+    isTrending: true,
   },
   {
     _id: 'p6',
@@ -137,25 +142,83 @@ export const FALLBACK_PRODUCTS = [
     category: { _id: 'c2', name: 'Fashion', slug: 'fashion' },
     category_slug: 'fashion',
     brand: 'Aura Cotton',
-    images: [{ url: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&fit=crop' }],
+    images: [{ url: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&fit=crop', type: 'main' }],
     stock: 70,
-    rating: { average: 4.5, count: 195 },
+    rating: 4.5,
     numReviews: 195,
     isDeal: false,
     isBestSeller: true,
     isNewArrival: false,
     isFeatured: false,
+    isTrending: false,
   },
 ];
 
-export function getMockResponse(url, params = {}) {
-  const cleanUrl = url.replace(/^\/api/, '');
+export function getMockResponse(rawUrl = '', params = {}) {
+  let cleanUrl = (rawUrl || '').replace(/^https?:\/\/[^\/]+/, '').replace(/^\/api/, '');
+  if (!cleanUrl.startsWith('/')) {
+    cleanUrl = '/' + cleanUrl;
+  }
 
   if (cleanUrl.startsWith('/categories')) {
     return {
       data: {
         success: true,
         data: FALLBACK_CATEGORIES,
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/products/brands')) {
+    return {
+      data: {
+        success: true,
+        data: ['Nova Audio', 'Apex Tech', 'VoltStream', 'Aura Cotton', 'PureGlow', 'IronCore'],
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/products/trending')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.filter((p) => p.isTrending || p.isBestSeller),
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/products/best-sellers')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.filter((p) => p.isBestSeller),
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/products/deals')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.filter((p) => p.isDeal),
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/products/new-arrivals')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.filter((p) => p.isNewArrival || p.isDeal),
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/products/featured')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.filter((p) => p.isFeatured),
       },
     };
   }
@@ -174,8 +237,11 @@ export function getMockResponse(url, params = {}) {
   if (cleanUrl.startsWith('/products')) {
     let list = [...FALLBACK_PRODUCTS];
 
-    if (params.bestsellers || params.isBestSeller) {
+    if (params.bestsellers === 'true' || params.isBestSeller === 'true') {
       list = list.filter((p) => p.isBestSeller);
+    }
+    if (params.deals === 'true' || params.isDeal === 'true') {
+      list = list.filter((p) => p.isDeal);
     }
     if (params.category) {
       list = list.filter((p) => p.category_slug === params.category || p.category?.slug === params.category);
@@ -185,17 +251,40 @@ export function getMockResponse(url, params = {}) {
       list = list.filter((p) => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
     }
 
+    // Notice: data is the array of products, pagination is sibling!
+    return {
+      data: {
+        success: true,
+        data: list,
+        pagination: {
+          page: 1,
+          limit: 12,
+          total: list.length,
+          pages: 1,
+        },
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/cart')) {
     return {
       data: {
         success: true,
         data: {
-          products: list,
-          pagination: {
-            page: 1,
-            pages: 1,
-            total: list.length,
-          },
+          items: [],
+          savedForLater: [],
+          totalItems: 0,
+          totalPrice: 0,
         },
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/wishlist')) {
+    return {
+      data: {
+        success: true,
+        data: [],
       },
     };
   }
