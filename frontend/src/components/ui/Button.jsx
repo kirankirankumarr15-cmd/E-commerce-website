@@ -2,19 +2,22 @@ import { motion } from 'framer-motion';
 import { classNames } from '../../utils/helpers';
 
 const variants = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg',
-  secondary: 'bg-surface-secondary text-text border border-border hover:bg-surface-tertiary',
-  outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-50',
-  ghost: 'text-text-muted hover:text-text hover:bg-surface-tertiary',
-  danger: 'bg-error text-white hover:bg-red-600',
-  success: 'bg-success text-white hover:bg-emerald-600',
+  primary: 'bg-[#ffd814] text-[#0f1111] hover:bg-[#f7ca00] border border-[#fcd200] shadow-sm font-medium',
+  secondary: 'bg-[#ffa41c] text-[#0f1111] hover:bg-[#fa8900] border border-[#ff8f00] shadow-sm font-medium',
+  outline: 'bg-white border border-[#d5d9d9] text-[#0f1111] hover:bg-[#f7fafa] shadow-sm',
+  ghost: 'text-[#0f1111] hover:bg-neutral-100',
+  danger: 'bg-[#cc0c39] text-white hover:bg-red-700 shadow-sm',
+  success: 'bg-[#007600] text-white hover:bg-emerald-700 shadow-sm',
+  'amazon-yellow': 'bg-[#ffd814] text-[#0f1111] hover:bg-[#f7ca00] border border-[#fcd200] shadow-sm font-medium',
+  'amazon-orange': 'bg-[#ffa41c] text-[#0f1111] hover:bg-[#fa8900] border border-[#ff8f00] shadow-sm font-medium',
+  'amazon-white': 'bg-white text-[#0f1111] hover:bg-[#f7fafa] border border-[#d5d9d9] shadow-sm',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-5 py-2.5 text-sm',
-  lg: 'px-6 py-3 text-base',
-  xl: 'px-8 py-3.5 text-base',
+  sm: 'px-3 py-1.5 text-xs rounded-full',
+  md: 'px-4 py-2 text-sm rounded-full',
+  lg: 'px-6 py-2.5 text-sm rounded-full font-medium',
+  xl: 'px-8 py-3 text-base rounded-full font-medium',
 };
 
 const Button = ({
@@ -29,12 +32,12 @@ const Button = ({
 }) => {
   return (
     <motion.button
-      whileHover={!disabled && !loading ? { scale: 1.02 } : {}}
-      whileTap={!disabled && !loading ? { scale: 0.98 } : {}}
+      whileHover={!disabled && !loading ? { scale: 1.01 } : {}}
+      whileTap={!disabled && !loading ? { scale: 0.99 } : {}}
       className={classNames(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-200 focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
-        variants[variant],
-        sizes[size],
+        'inline-flex items-center justify-center gap-2 transition-colors duration-150 focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
+        variants[variant] || variants.primary,
+        sizes[size] || sizes.md,
         className
       )}
       disabled={disabled || loading}

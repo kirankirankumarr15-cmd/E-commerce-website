@@ -1,114 +1,106 @@
 import { Link } from 'react-router-dom';
-import { Share2, Globe, Mail, Phone, MapPin } from 'lucide-react';
+import { Globe, ArrowUp } from 'lucide-react';
 
-const footerLinks = {
-  shop: [
-    { label: 'All Products', to: '/shop' },
-    { label: 'New Arrivals', to: '/shop?new=true' },
-    { label: 'Best Sellers', to: '/shop?bestsellers=true' },
-    { label: 'Deals', to: '/shop?deals=true' },
-  ],
-  support: [
-    { label: 'My Account', to: '/profile' },
-    { label: 'Order Tracking', to: '/orders' },
-    { label: 'Wishlist', to: '/wishlist' },
-    { label: 'Cart', to: '/cart' },
-  ],
-  company: [
-    { label: 'About NOVA MART', to: '/' },
-    { label: 'Contact Us', to: '/' },
-    { label: 'Privacy Policy', to: '/' },
-    { label: 'Terms of Service', to: '/' },
-  ],
-};
+const Footer = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-const Footer = () => (
-  <footer className="bg-text text-white" role="contentinfo">
-    <div className="container-narrow py-12 lg:py-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">N</span>
+  return (
+    <footer className="w-full text-white select-none" role="contentinfo">
+      {/* 1. Back to Top Bar */}
+      <button
+        onClick={scrollToTop}
+        className="w-full py-3.5 bg-[#37475a] hover:bg-[#485769] text-center text-xs font-semibold text-white transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+      >
+        <span>Back to top</span>
+        <ArrowUp className="h-3.5 w-3.5" />
+      </button>
+
+      {/* 2. Amazon 4-Column Directory (#232f3e) */}
+      <div className="bg-[#232f3e] py-10 sm:py-12 border-b border-[#3a4553]">
+        <div className="container-narrow grid grid-cols-2 md:grid-cols-4 gap-8 text-xs text-[#dddddd]">
+          <div>
+            <h3 className="font-bold text-sm text-white mb-3">Get to Know Us</h3>
+            <ul className="space-y-2 text-[#cccccc]">
+              <li><Link to="/" className="hover:underline">About NOVA MART</Link></li>
+              <li><Link to="/" className="hover:underline">Careers</Link></li>
+              <li><Link to="/" className="hover:underline">Press Releases</Link></li>
+              <li><Link to="/" className="hover:underline">Nova Science & Tech</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-sm text-white mb-3">Connect with Us</h3>
+            <ul className="space-y-2 text-[#cccccc]">
+              <li><a href="#" className="hover:underline">Facebook</a></li>
+              <li><a href="#" className="hover:underline">Twitter / X</a></li>
+              <li><a href="#" className="hover:underline">Instagram</a></li>
+              <li><a href="#" className="hover:underline">YouTube</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-sm text-white mb-3">Make Money with Us</h3>
+            <ul className="space-y-2 text-[#cccccc]">
+              <li><Link to="/admin" className="hover:underline">Sell on NOVA MART</Link></li>
+              <li><Link to="/" className="hover:underline">Protect and Build Your Brand</Link></li>
+              <li><Link to="/" className="hover:underline">Become an Affiliate Partner</Link></li>
+              <li><Link to="/" className="hover:underline">Fulfilment by NOVA MART</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold text-sm text-white mb-3">Let Us Help You</h3>
+            <ul className="space-y-2 text-[#cccccc]">
+              <li><Link to="/profile" className="hover:underline">Your Account</Link></li>
+              <li><Link to="/orders" className="hover:underline">Returns Centre & Tracking</Link></li>
+              <li><Link to="/orders" className="hover:underline">Scheduled Delivery Assistance</Link></li>
+              <li><Link to="/" className="hover:underline">100% Purchase Protection</Link></li>
+              <li><Link to="/" className="hover:underline">Customer Service & Help</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Middle Line with Logo & Region Selector */}
+        <div className="container-narrow pt-8 mt-8 border-t border-[#3a4553] flex flex-wrap items-center justify-center gap-6 text-xs text-[#cccccc]">
+          <Link to="/" className="flex flex-col items-center">
+            <div className="flex items-center tracking-tight leading-none">
+              <span className="text-xl font-black text-white">nova</span>
+              <span className="text-xl font-black text-[#febd69]">mart</span>
             </div>
-            <span className="text-lg font-bold">NOVA MART</span>
+            <svg className="w-16 h-2 text-[#febd69] fill-current" viewBox="0 0 100 12">
+              <path d="M 0 3 Q 50 14 96 3 L 90 0 Q 50 11 4 0 Z" />
+              <polygon points="94,0 100,5 98,11" />
+            </svg>
+          </Link>
+
+          <div className="flex items-center gap-3">
+            <div className="border border-[#848688] rounded px-3 py-1.5 flex items-center gap-1.5 cursor-default">
+              <Globe className="h-3.5 w-3.5 text-[#cccccc]" />
+              <span>English</span>
+            </div>
+            <div className="border border-[#848688] rounded px-3 py-1.5 flex items-center gap-1.5 cursor-default">
+              <span>🇮🇳</span>
+              <span>India</span>
+            </div>
           </div>
-          <p className="text-sm text-white/70 mb-4">
-            Everything You Need. One Smart Store.
-          </p>
-          <div className="flex gap-3">
-            {[Share2, Globe, Mail].map((Icon, i) => (
-              <a
-                key={i}
-                href="#"
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-                aria-label={`Social media link ${i + 1}`}
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Shop</h3>
-          <ul className="space-y-2.5">
-            {footerLinks.shop.map((link) => (
-              <li key={link.to + link.label}>
-                <Link to={link.to} className="text-sm text-white/70 hover:text-white transition-colors">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Support</h3>
-          <ul className="space-y-2.5">
-            {footerLinks.support.map((link) => (
-              <li key={link.to + link.label}>
-                <Link to={link.to} className="text-sm text-white/70 hover:text-white transition-colors">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Contact</h3>
-          <ul className="space-y-3">
-            <li className="flex items-center gap-2 text-sm text-white/70">
-              <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
-              support@novamart.com
-            </li>
-            <li className="flex items-center gap-2 text-sm text-white/70">
-              <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
-              +91 98765 43210
-            </li>
-            <li className="flex items-start gap-2 text-sm text-white/70">
-              <MapPin className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
-              Mumbai, Maharashtra, India
-            </li>
-          </ul>
         </div>
       </div>
 
-      <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-white/50">
-          &copy; {new Date().getFullYear()} NOVA MART. All rights reserved.
+      {/* 3. Bottom Legal Footer (#131921) */}
+      <div className="bg-[#131921] py-8 text-center text-[11px] text-[#999999] space-y-2">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-white/80">
+          <Link to="/" className="hover:underline">Conditions of Use & Sale</Link>
+          <Link to="/" className="hover:underline">Privacy Notice</Link>
+          <Link to="/" className="hover:underline">Interest-Based Ads</Link>
+        </div>
+        <p>
+          &copy; {new Date().getFullYear()}, NovaMart.in, Inc. or its affiliates. All rights reserved.
         </p>
-        <div className="flex gap-6">
-          {footerLinks.company.slice(2).map((link) => (
-            <Link key={link.label} to={link.to} className="text-sm text-white/50 hover:text-white transition-colors">
-              {link.label}
-            </Link>
-          ))}
-        </div>
       </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 export default Footer;

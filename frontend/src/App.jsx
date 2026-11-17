@@ -33,22 +33,28 @@ function App() {
               <ToastContainer />
               <Routes>
                 <Route element={<MainLayout />}>
-                  <Route index element={<LoginPage />} />
-                  <Route path="home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-                  <Route path="shop" element={<ProtectedRoute><ShopPage /></ProtectedRoute>} />
-                  <Route path="category/:slug" element={<ProtectedRoute><CategoryPage /></ProtectedRoute>} />
-                  <Route path="product/:slug" element={<ProtectedRoute><ProductDetailsPage /></ProtectedRoute>} />
+                  {/* Public Storefront Routes like Amazon */}
+                  <Route index element={<HomePage />} />
+                  <Route path="home" element={<HomePage />} />
+                  <Route path="shop" element={<ShopPage />} />
+                  <Route path="category/:slug" element={<CategoryPage />} />
+                  <Route path="product/:slug" element={<ProductDetailsPage />} />
+                  <Route path="cart" element={<CartPage />} />
+                  <Route path="wishlist" element={<WishlistPage />} />
+
+                  {/* Auth Routes */}
                   <Route path="login" element={<LoginPage />} />
                   <Route path="register" element={<RegisterPage />} />
                   <Route path="forgot-password" element={<ForgotPasswordPage />} />
-                  <Route path="wishlist" element={<WishlistPage />} />
-                  <Route path="cart" element={<CartPage />} />
+
+                  {/* Protected Account & Order Routes */}
                   <Route path="checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
                   <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
                   <Route path="orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
                   <Route path="orders/:id" element={<ProtectedRoute><OrderDetailPage /></ProtectedRoute>} />
                   <Route path="order-confirmation/:id" element={<ProtectedRoute><OrderConfirmationPage /></ProtectedRoute>} />
                   <Route path="admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
+
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Routes>

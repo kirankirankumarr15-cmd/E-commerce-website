@@ -6,8 +6,19 @@ import { productService } from '../../services';
 import { formatPrice } from '../../utils/helpers';
 import { useDebounce } from '../../hooks/useDebounce';
 
-const SearchBar = ({ className = '', placeholder = 'Search products...', autoFocus = false }) => {
+const departments = [
+  { label: 'All Categories', value: '' },
+  { label: 'Electronics', value: 'electronics' },
+  { label: 'Fashion', value: 'fashion' },
+  { label: 'Home & Living', value: 'home-living' },
+  { label: 'Beauty', value: 'beauty' },
+  { label: 'Sports', value: 'sports' },
+  { label: 'Books', value: 'books' },
+];
+
+const SearchBar = ({ className = '', placeholder = 'Search NOVA MART', autoFocus = false }) => {
   const [query, setQuery] = useState('');
+  const [department, setDepartment] = useState('');
   const [suggestions, setSuggestions] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
@@ -34,9 +45,12 @@ const SearchBar = ({ className = '', placeholder = 'Search products...', autoFoc
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (query.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(query.trim())}`);
-      setQuery('');
+    if (query.trim() || department) {
+      let url = `/shop?`;
+      const params = new URLSearchParams();
+      if (query.trim()) params.set('search', query.trim());
+      if (department) params.set('category', department);
+      navigate(`/shop?${params.toString()}`);
       setShowSuggestions(false);
     }
   };
@@ -48,50 +62,97 @@ const SearchBar = ({ className = '', placeholder = 'Search products...', autoFoc
   };
 
   return (
-    <div ref={ref} className={`relative ${className}`}>
-      <form onSubmit={handleSubmit} role="search">
-        <label htmlFor="search-input" className="sr-only">Search products</label>
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" aria-hidden="true" />
-        <input
-          id="search-input"
-          type="search"
-          value={query}
-          onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
-          onFocus={() => setShowSuggestions(true)}
-          placeholder={placeholder}
-          autoFocus={autoFocus}
-          className="w-full pl-10 pr-10 py-2.5 bg-surface-secondary border border-border rounded-xl text-sm text-text placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-        />
-        {query && (
-          <button type="button" onClick={() => { setQuery(''); setSuggestions(null); }} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search">
-            <X className="h-4 w-4 text-text-muted" />
-          </button>
-        )}
+    <div ref={ref} className={`relative w-full ${className}`}>
+      <form
+        onSubmit={handleSubmit}
+        role="search"
+        className="flex items-center w-full h-10 rounded-md overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-[#e77600] border border-transparent"
+      >
+        {/* Amazon-style Department Dropdown */}
+        <div className="relative shrink-0 bg-[#f3f3f3] hover:bg-[#dadada] border-r border-[#cdcdcd] transition-colors hidden sm:flex items-center">
+          <select
+            value={department}
+            aria-label="Select Category"
+            onChange={(e) => setDepartment(e.target.value)}
+            className="h-10 pl-3 pr-6 text-xs text-[#0f1111] bg-transparent cursor-pointer focus:outline-none appearance-none"
+          >
+            {departments.map((dept) => (
+              <option key={dept.value} value={dept.value} className="text-sm bg-white text-black">
+                {dept.label}
+              </option>
+            ))}
+          </select>
+          <div className="absolute right-2 pointer-events-none text-neutral-600 text-[10px]">▼</div>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative flex-1 h-full flex items-center">
+          <input
+            id="search-input"
+            type="search"
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
+            onFocus={() => setShowSuggestions(true)}
+            placeholder={placeholder}
+            autoFocus={autoFocus}
+            className="w-full h-full px-3 text-sm text-[#0f1111] placeholder:text-neutral-500 focus:outline-none bg-white"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => { setQuery(''); setSuggestions(null); }}
+              className="p-1 mr-2 text-neutral-400 hover:text-neutral-700"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Amazon-style Orange Magnifying Glass Button */}
+        <button
+          type="submit"
+          className="h-10 px-4 bg-[#febd69] hover:bg-[#f3a847] active:bg-[#e77600] flex items-center justify-center transition-colors shrink-0 cursor-pointer text-[#131921]"
+          aria-label="Search"
+        >
+          <Search className="h-5 w-5 stroke-[2.2]" />
+        </button>
       </form>
 
+      {/* Auto-suggestions Dropdown */}
       <AnimatePresence>
         {showSuggestions && suggestions && (suggestions.products?.length > 0 || suggestions.brands?.length > 0) && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-surface border border-border rounded-xl shadow-xl z-50 overflow-hidden"
+            exit={{ opacity: 0, y: -4 }}
+            className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#cdcdcd] rounded-b-md shadow-2xl z-50 overflow-hidden"
           >
             {suggestions.products?.map((p) => (
-              <button key={p._id} onClick={() => goToProduct(p.slug)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-surface-secondary text-left">
-                {p.image && <img src={p.image} alt="" className="w-10 h-10 rounded-lg object-cover" />}
+              <button
+                key={p._id}
+                onClick={() => goToProduct(p.slug)}
+                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[#f3f3f3] text-left border-b border-neutral-100 last:border-0"
+              >
+                {p.image && <img src={p.image} alt="" className="w-10 h-10 rounded object-cover border border-neutral-200" />}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text truncate">{p.name}</p>
-                  <p className="text-xs text-text-muted">{p.brand} · {formatPrice(p.finalPrice)}</p>
+                  <p className="text-sm font-medium text-[#0f1111] truncate">{p.name}</p>
+                  <p className="text-xs text-[#565959]">{p.brand} · <span className="font-semibold text-[#0f1111]">{formatPrice(p.finalPrice)}</span></p>
                 </div>
               </button>
             ))}
             {suggestions.brands?.length > 0 && (
-              <div className="border-t border-border px-4 py-2">
-                <p className="text-xs text-text-muted mb-1 flex items-center gap-1"><TrendingUp className="h-3 w-3" /> Brands</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="bg-[#fcfcfc] border-t border-neutral-200 px-4 py-2">
+                <p className="text-xs text-[#565959] mb-1.5 flex items-center gap-1 font-semibold">
+                  <TrendingUp className="h-3 w-3 text-[#e77600]" /> Popular Brands
+                </p>
+                <div className="flex flex-wrap gap-1.5">
                   {suggestions.brands.map((b) => (
-                    <button key={b} onClick={() => { navigate(`/shop?brand=${encodeURIComponent(b)}`); setShowSuggestions(false); }} className="text-xs px-2 py-1 bg-surface-secondary rounded-full hover:bg-primary-50 hover:text-primary-600">
+                    <button
+                      key={b}
+                      onClick={() => { navigate(`/shop?brand=${encodeURIComponent(b)}`); setShowSuggestions(false); }}
+                      className="text-xs px-2.5 py-1 bg-white border border-neutral-200 rounded-full hover:border-[#e77600] hover:text-[#e77600]"
+                    >
                       {b}
                     </button>
                   ))}
