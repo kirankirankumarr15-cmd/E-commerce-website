@@ -17,6 +17,7 @@ import {
   Sparkles,
   Truck,
   LayoutDashboard,
+  Trash2,
 } from "lucide-react";
 import { useCart } from "@/lib/cartContext";
 import { useAuth } from "@/lib/authContext";
@@ -33,12 +34,13 @@ const categories = [
 
 export default function Navbar() {
   const router = useRouter();
-  const { cartCount } = useCart();
+  const { cartCount, items, removeFromCart, itemsPrice } = useCart();
   const { user, addresses, loginDemo, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [cartDropdownOpen, setCartDropdownOpen] = useState(false);
 
   const defaultAddress = addresses.find((a) => a.isDefault) || addresses[0];
   const locationText = defaultAddress
@@ -235,22 +237,117 @@ export default function Navbar() {
               <span className="text-xs font-bold text-white leading-tight">& Orders</span>
             </Link>
 
-            {/* Cart Icon with Live Badge */}
-            <Link
-              href="/cart"
-              className="flex items-center gap-1 p-1.5 rounded hover:outline hover:outline-1 hover:outline-white shrink-0"
-              aria-label={`Shopping cart with ${cartCount} items`}
+            {/* Cart Icon with Live Badge & Quick Remove Dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setCartDropdownOpen(true)}
+              onMouseLeave={() => setCartDropdownOpen(false)}
             >
-              <div className="relative">
-                <ShoppingCart className="h-7 w-7 text-white stroke-[1.8]" />
-                <span className="absolute -top-1 left-3.5 min-w-[18px] h-[18px] bg-[#febd69] text-[#131921] text-[11px] font-black rounded-full flex items-center justify-center px-1">
-                  {cartCount}
+              <Link
+                href="/cart"
+                onClick={() => setCartDropdownOpen(false)}
+                className="flex items-center gap-1 p-1.5 rounded hover:outline hover:outline-1 hover:outline-white shrink-0"
+                aria-label={`Shopping cart with ${cartCount} items`}
+              >
+                <div className="relative">
+                  <ShoppingCart className="h-7 w-7 text-white stroke-[1.8]" />
+                  <span className="absolute -top-1 left-3.5 min-w-[18px] h-[18px] bg-[#febd69] text-[#131921] text-[11px] font-black rounded-full flex items-center justify-center px-1">
+                    {cartCount}
+                  </span>
+                </div>
+                <span className="hidden sm:inline text-xs font-bold text-white mt-2">
+                  Cart
                 </span>
-              </div>
-              <span className="hidden sm:inline text-xs font-bold text-white mt-2">
-                Cart
-              </span>
-            </Link>
+              </Link>
+
+              {/* Cart Popover / Dropdown Menu */}
+              {cartDropdownOpen && (
+                <div className="absolute right-0 top-full mt-0.5 w-80 sm:w-96 rounded-lg border border-gray-200 bg-white p-4 text-gray-900 shadow-2xl z-50">
+                  <div className="flex items-center justify-between border-b pb-2 mb-3">
+                    <span className="font-bold text-sm text-gray-900">
+                      Shopping Cart ({cartCount} {cartCount === 1 ? "item" : "items"})
+                    </span>
+                    <Link
+                      href="/cart"
+                      onClick={() => setCartDropdownOpen(false)}
+                      className="text-xs font-semibold text-[#007185] hover:underline"
+                    >
+                      View Cart
+                    </Link>
+                  </div>
+
+                  {items.length === 0 ? (
+                    <div className="py-6 text-center text-xs text-gray-500">
+                      Your cart is empty.
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+                      {items.map(({ product, quantity }) => (
+                        <div
+                          key={product.id}
+                          className="flex items-center justify-between gap-3 text-xs border-b border-gray-100 pb-2"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <img
+                              src={product.images[0] || ""}
+                              alt={product.name}
+                              className="h-10 w-10 object-contain rounded border border-gray-100 p-0.5 shrink-0"
+                            />
+                            <div className="min-w-0">
+                              <p className="font-semibold text-gray-900 truncate">
+                                {product.name}
+                              </p>
+                              <p className="text-[11px] text-gray-500">
+                                Qty: {quantity} · ₹{(product.final_price * quantity).toLocaleString("en-IN")}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Quick Remove Button directly in Navbar */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              removeFromCart(product.id);
+                            }}
+                            className="flex items-center gap-1 rounded bg-red-50 hover:bg-red-100 text-red-700 px-2 py-1 text-[11px] font-bold border border-red-200 shrink-0 transition cursor-pointer"
+                            title="Remove item from cart"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {items.length > 0 && (
+                    <div className="pt-3 border-t mt-3 space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-gray-900">
+                        <span>Subtotal:</span>
+                        <span>₹{itemsPrice.toLocaleString("en-IN")}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <Link
+                          href="/cart"
+                          onClick={() => setCartDropdownOpen(false)}
+                          className="flex-1 text-center rounded-full border border-gray-300 py-1.5 text-xs font-bold text-gray-800 hover:bg-gray-50"
+                        >
+                          Go to Cart
+                        </Link>
+                        <Link
+                          href="/checkout"
+                          onClick={() => setCartDropdownOpen(false)}
+                          className="flex-1 text-center rounded-full bg-[#ffd814] py-1.5 text-xs font-bold text-gray-900 hover:bg-yellow-400"
+                        >
+                          Proceed to Buy
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* Mobile Hamburger Button */}
             <button

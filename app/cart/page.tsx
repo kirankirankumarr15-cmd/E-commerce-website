@@ -12,6 +12,8 @@ import {
   ArrowRight,
   Heart,
   RotateCcw,
+  Minus,
+  Plus,
 } from "lucide-react";
 import { useCart } from "@/lib/cartContext";
 
@@ -24,6 +26,7 @@ export default function CartPage() {
     removeFromCart,
     saveForLater,
     moveToCart,
+    clearCart,
     itemsPrice,
     shippingPrice,
     totalPrice,
@@ -77,9 +80,19 @@ export default function CartPage() {
             {/* Cart Box */}
             <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6 shadow-xs">
               <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h1 className="text-xl sm:text-2xl font-bold text-[#0f1111]">
-                  Shopping Cart
-                </h1>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-[#0f1111]">
+                    Shopping Cart
+                  </h1>
+                  {items.length > 0 && (
+                    <button
+                      onClick={() => clearCart()}
+                      className="text-xs text-[#007185] hover:text-red-600 hover:underline mt-1 font-medium cursor-pointer"
+                    >
+                      Deselect / Remove all items
+                    </button>
+                  )}
+                </div>
                 <span className="hidden sm:inline text-xs text-gray-500">Price</span>
               </div>
 
@@ -151,50 +164,58 @@ export default function CartPage() {
                           </div>
                         </div>
 
-                        {/* Quantity & Actions Bar */}
-                        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
-                          {/* Qty Selector */}
-                          <div className="flex items-center gap-1 rounded-md border border-gray-300 bg-gray-50 px-2.5 py-1">
-                            <label
-                              htmlFor={`qty-${product.id}`}
-                              className="text-gray-600 font-medium text-[11px]"
+                        {/* Interactive Quantity & Actions Bar */}
+                        <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs">
+                          {/* Amazon Quantity Stepper */}
+                          <div className="flex items-center rounded-lg border border-gray-300 bg-gray-50 overflow-hidden shadow-2xs">
+                            <button
+                              onClick={() => {
+                                if (quantity <= 1) {
+                                  removeFromCart(product.id);
+                                } else {
+                                updateQuantity(product.id, quantity - 1);
+                                }
+                              }}
+                              className="px-2.5 py-1.5 hover:bg-gray-200 text-gray-700 transition cursor-pointer"
+                              title={quantity <= 1 ? "Remove item" : "Decrease quantity"}
                             >
-                              Qty:
-                            </label>
-                            <select
-                              id={`qty-${product.id}`}
-                              value={quantity}
-                              onChange={(e) =>
-                                updateQuantity(product.id, Number(e.target.value))
-                              }
-                              className="bg-transparent font-bold text-gray-900 focus:outline-none"
+                              {quantity <= 1 ? (
+                                <Trash2 className="h-3.5 w-3.5 text-red-500" />
+                              ) : (
+                                <Minus className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+
+                            <span className="px-3 py-1 font-bold text-gray-900 text-xs bg-white border-x border-gray-200 min-w-[28px] text-center">
+                              {quantity}
+                            </span>
+
+                            <button
+                              onClick={() => updateQuantity(product.id, quantity + 1)}
+                              className="px-2.5 py-1.5 hover:bg-gray-200 text-gray-700 transition cursor-pointer"
+                              title="Increase quantity"
                             >
-                              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                                <option key={num} value={num}>
-                                  {num}
-                                </option>
-                              ))}
-                            </select>
+                              <Plus className="h-3.5 w-3.5" />
+                            </button>
                           </div>
 
-                          <span className="text-gray-300">|</span>
-
-                          {/* Delete */}
+                          {/* Distinct Remove Button */}
                           <button
                             onClick={() => removeFromCart(product.id)}
-                            className="text-[#007185] hover:text-[#c45500] hover:underline"
+                            className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white hover:bg-red-50 hover:border-red-300 hover:text-red-700 px-3 py-1.5 text-xs font-semibold text-gray-700 transition shadow-2xs cursor-pointer"
+                            title="Remove from Cart"
                           >
-                            Delete
+                            <Trash2 className="h-3.5 w-3.5 text-red-500" />
+                            <span>Delete</span>
                           </button>
-
-                          <span className="text-gray-300">|</span>
 
                           {/* Save for later */}
                           <button
                             onClick={() => saveForLater(product.id)}
-                            className="text-[#007185] hover:text-[#c45500] hover:underline"
+                            className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-700 transition shadow-2xs cursor-pointer"
                           >
-                            Save for later
+                            <Heart className="h-3.5 w-3.5 text-gray-400" />
+                            <span>Save for later</span>
                           </button>
                         </div>
                       </div>
