@@ -3,7 +3,7 @@ export const FALLBACK_CATEGORIES = [
   { _id: 'c2', id: 'c2', name: 'Fashion', slug: 'fashion', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&fit=crop' },
   { _id: 'c3', id: 'c3', name: 'Home & Living', slug: 'home-living', image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&fit=crop' },
   { _id: 'c4', id: 'c4', name: 'Beauty', slug: 'beauty', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&fit=crop' },
-  { _id: 'c5', id: 'c5', name: 'Sports', slug: 'sports', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba7951?w=600&fit=crop' },
+  { _id: 'c5', id: 'c5', name: 'Sports', slug: 'sports', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&fit=crop' },
   { _id: 'c6', id: 'c6', name: 'Books', slug: 'books', image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&fit=crop' },
 ];
 
@@ -1146,14 +1146,51 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
   }
 
   if (cleanUrl.startsWith('/cart')) {
+    let cartData = { items: [], savedForLater: [], totalItems: 0, totalPrice: 0 };
+    try {
+      const raw = safeStorage.getItem('nova_mart_guest_cart');
+      if (raw) cartData = JSON.parse(raw);
+    } catch {}
+
+    // Support adding items via mock fallback
+    if (reqData && (reqData.productId || reqData.product)) {
+      const prodId = reqData.productId || reqData.product;
+      const product =
+        FALLBACK_PRODUCTS.find((p) => p._id === prodId || p.id === prodId || p.slug === prodId) ||
+        FALLBACK_PRODUCTS[0];
+      const quantity = Number(reqData.quantity) || 1;
+      const existing = cartData.items?.find((i) => i.product?._id === product._id || i.product?.id === product._id);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        if (!cartData.items) cartData.items = [];
+        cartData.items.push({
+          _id: 'ci_' + Date.now(),
+          product,
+          quantity,
+          price: product.finalPrice || product.price,
+        });
+      }
+      cartData.totalItems = cartData.items.reduce((s, i) => s + i.quantity, 0);
+      cartData.totalPrice = cartData.items.reduce((s, i) => s + (i.price || 0) * i.quantity, 0);
+      safeStorage.setItem('nova_mart_guest_cart', JSON.stringify(cartData));
+    }
+
+    const itemsPrice = cartData.totalPrice || 0;
+    const shippingPrice = itemsPrice >= 999 || itemsPrice === 0 ? 0 : 49;
+    const taxPrice = Math.round(itemsPrice * 0.18);
+    const totalPrice = itemsPrice + shippingPrice + taxPrice;
+
     return {
       data: {
         success: true,
-        data: {
-          items: [],
-          savedForLater: [],
-          totalItems: 0,
-          totalPrice: 0,
+        data: cartData,
+        pricing: {
+          itemsPrice,
+          discountPrice: 0,
+          shippingPrice,
+          taxPrice,
+          totalPrice,
         },
       },
     };

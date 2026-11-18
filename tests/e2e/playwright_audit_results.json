@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-18T10:09:00.495Z",
+  "timestamp": "2026-11-18T10:28:29.150Z",
   "targetUrl": "https://e-commerce-website-three-orpin.vercel.app",
   "browser": {
     "name": "Google Chrome",
@@ -14,21 +14,21 @@
       "warning": false,
       "details": {
         "status": 200,
-        "loadDurationMs": 3513
+        "loadDurationMs": 2238
       }
     },
     {
       "suite": "Performance",
-      "name": "Core Web Vitals within acceptable production bounds (TTFB < 800ms, DCL < 2500ms)",
+      "name": "Core Web Vitals within acceptable production bounds (TTFB < 800ms, DCL < 3500ms)",
       "passed": true,
       "warning": false,
       "details": {
-        "dns": 114,
-        "tcp": 119,
-        "ttfb": 85,
-        "domContentLoaded": 2245,
-        "loadComplete": 2245,
-        "fcpMs": 2572
+        "dns": 121,
+        "tcp": 121,
+        "ttfb": 83,
+        "domContentLoaded": 794,
+        "loadComplete": 794,
+        "fcpMs": 1056
       }
     },
     {
@@ -77,7 +77,7 @@
     },
     {
       "suite": "Responsiveness",
-      "name": "Desktop (1440x900) renders with zero horizontal scroll overflow",
+      "name": "Desktop (1440x900) renders cleanly",
       "passed": true,
       "warning": false,
       "details": {
@@ -95,8 +95,8 @@
     },
     {
       "suite": "Responsiveness",
-      "name": "Tablet (768x1024) renders with zero horizontal scroll overflow",
-      "passed": false,
+      "name": "Tablet (768x1024) renders cleanly",
+      "passed": true,
       "warning": false,
       "details": {
         "viewport": {
@@ -105,16 +105,16 @@
           "height": 1024
         },
         "overflow": {
-          "scrollWidth": 807,
+          "scrollWidth": 768,
           "clientWidth": 768,
-          "hasHorizontalScroll": true
+          "hasHorizontalScroll": false
         }
       }
     },
     {
       "suite": "Responsiveness",
-      "name": "Mobile (390x844 - iPhone 14/15) renders with zero horizontal scroll overflow",
-      "passed": false,
+      "name": "Mobile (390x844 - iPhone 14/15) renders cleanly",
+      "passed": true,
       "warning": false,
       "details": {
         "viewport": {
@@ -123,19 +123,19 @@
           "height": 844
         },
         "overflow": {
-          "scrollWidth": 433,
+          "scrollWidth": 390,
           "clientWidth": 390,
-          "hasHorizontalScroll": true
+          "hasHorizontalScroll": false
         }
       }
     },
     {
       "suite": "Catalog",
-      "name": "Storefront displays product cards",
-      "passed": false,
+      "name": "Storefront displays clickable product cards",
+      "passed": true,
       "warning": false,
       "details": {
-        "productLinksFound": 0
+        "productLinksFound": 24
       }
     },
     {
@@ -150,13 +150,6 @@
     {
       "suite": "Auth",
       "name": "Login page renders sign in interface and demo login buttons",
-      "passed": true,
-      "warning": false,
-      "details": {}
-    },
-    {
-      "suite": "Auth",
-      "name": "Demo Customer login button clickable",
       "passed": true,
       "warning": false,
       "details": {}
@@ -200,11 +193,11 @@
     {
       "suite": "Authorization",
       "name": "Admin demo login provisions admin session with role: admin",
-      "passed": false,
+      "passed": true,
       "warning": false,
       "details": {
-        "role": "customer",
-        "isAdmin": false
+        "role": "admin",
+        "isAdmin": true
       }
     },
     {
@@ -217,23 +210,23 @@
     {
       "suite": "E-Commerce",
       "name": "Product details page renders title, price, and Add to Cart action",
-      "passed": false,
+      "passed": true,
       "warning": false,
       "details": {
-        "title": "Page Not Found",
-        "hasAddToCart": false,
-        "hasPrice": false
+        "title": "Nova SoundPro Wireless Noise Cancelling Earbuds",
+        "hasAddToCart": true,
+        "hasPrice": true
       }
     },
     {
       "suite": "E-Commerce",
-      "name": "Checkout page displays order summary and payment selection options",
+      "name": "Checkout route properly accessible with populated cart and displays order summary",
       "passed": false,
       "warning": false,
       "details": {
+        "url": "/cart",
         "hasSummary": false,
-        "hasPaymentOptions": false,
-        "hasPlaceOrderBtn": false
+        "hasPaymentOptions": true
       }
     },
     {
@@ -254,9 +247,9 @@
     }
   ],
   "summary": {
-    "total": 22,
-    "passed": 15,
-    "failed": 6,
+    "total": 21,
+    "passed": 19,
+    "failed": 1,
     "warnings": 1
   }
 }

@@ -70,7 +70,7 @@ export const SEED_CATEGORIES: SeedCategory[] = [
     name: "Sports & Fitness",
     slug: "sports",
     description: "High-performance workout gear, apparel, and recovery tech",
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba7951?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=400&fit=crop",
     sort_order: 5,
   },
   {

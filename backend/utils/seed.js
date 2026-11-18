@@ -11,7 +11,7 @@ const categories = [
   { name: 'Fashion', description: 'Trendy clothing and accessories for every style', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=400&fit=crop', sortOrder: 2 },
   { name: 'Home & Living', description: 'Beautiful essentials for your home', image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop', sortOrder: 3 },
   { name: 'Beauty', description: 'Premium skincare and beauty products', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=400&fit=crop', sortOrder: 4 },
-  { name: 'Sports', description: 'Gear up for an active lifestyle', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba7951?w=600&h=400&fit=crop', sortOrder: 5 },
+  { name: 'Sports', description: 'Gear up for an active lifestyle', image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=400&fit=crop', sortOrder: 5 },
   { name: 'Books', description: 'Knowledge and stories for curious minds', image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=400&fit=crop', sortOrder: 6 },
 ];
 

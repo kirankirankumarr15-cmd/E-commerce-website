@@ -6,7 +6,7 @@ insert into categories (id, name, slug, description, image, sort_order) values
 ('11111111-0000-0000-0000-000000000002', 'Fashion', 'fashion', 'Curated styles, apparel, footwear, and classic accessories', 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=400&fit=crop', 2),
 ('11111111-0000-0000-0000-000000000003', 'Home & Living', 'home-living', 'Modern furnishings, kitchen essentials, and ambient lighting', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop', 3),
 ('11111111-0000-0000-0000-000000000004', 'Beauty & Personal Care', 'beauty', 'Dermatologist-formulated skincare, haircare, and fragrances', 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=400&fit=crop', 4),
-('11111111-0000-0000-0000-000000000005', 'Sports & Fitness', 'sports', 'High-performance workout gear, apparel, and recovery tech', 'https://images.unsplash.com/photo-1461896836934-ffe607ba7951?w=600&h=400&fit=crop', 5),
+('11111111-0000-0000-0000-000000000005', 'Sports & Fitness', 'sports', 'High-performance workout gear, apparel, and recovery tech', 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&h=400&fit=crop', 5),
 ('11111111-0000-0000-0000-000000000006', 'Books & Knowledge', 'books', 'Bestselling non-fiction, fiction, tech, and productivity reads', 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=400&fit=crop', 6)
 on conflict (slug) do nothing;
 
