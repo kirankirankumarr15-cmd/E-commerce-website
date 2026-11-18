@@ -18,7 +18,7 @@ const DELIVERY_OPTIONS = [
 ];
 
 const CheckoutPage = () => {
-  const { cart, fetchCart, refreshPricing, clearCart } = useCart();
+  const { cart, loading: cartLoading, fetchCart, refreshPricing, clearCart } = useCart();
   const { user, loadUser } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -58,6 +58,15 @@ const CheckoutPage = () => {
   }, [deliveryOption, cart?.couponCode, cart?.items?.length]);
 
   const items = cart?.items || [];
+
+  if (cartLoading || cart === null) {
+    return (
+      <div className="container-narrow py-16 text-center">
+        <div className="w-8 h-8 border-3 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-sm text-text-muted">Loading your checkout...</p>
+      </div>
+    );
+  }
 
   if (items.length === 0 && !completedOrder) {
     navigate('/cart');

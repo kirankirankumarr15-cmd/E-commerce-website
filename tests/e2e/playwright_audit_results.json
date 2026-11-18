@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-18T10:28:29.150Z",
+  "timestamp": "2026-11-18T10:33:14.807Z",
   "targetUrl": "https://e-commerce-website-three-orpin.vercel.app",
   "browser": {
     "name": "Google Chrome",
@@ -14,7 +14,7 @@
       "warning": false,
       "details": {
         "status": 200,
-        "loadDurationMs": 2238
+        "loadDurationMs": 3116
       }
     },
     {
@@ -23,12 +23,12 @@
       "passed": true,
       "warning": false,
       "details": {
-        "dns": 121,
-        "tcp": 121,
-        "ttfb": 83,
-        "domContentLoaded": 794,
-        "loadComplete": 794,
-        "fcpMs": 1056
+        "dns": 68,
+        "tcp": 81,
+        "ttfb": 38,
+        "domContentLoaded": 1419,
+        "loadComplete": 1419,
+        "fcpMs": 1692
       }
     },
     {
@@ -71,7 +71,7 @@
           "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&fit=crop",
           "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&fit=crop",
           "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&fit=crop",
-          "https://images.unsplash.com/photo-1461896836934-ffe607ba7951?w=600&fit=crop"
+          "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&fit=crop"
         ]
       }
     },
@@ -225,7 +225,7 @@
       "warning": false,
       "details": {
         "url": "/cart",
-        "hasSummary": false,
+        "hasSummary": true,
         "hasPaymentOptions": true
       }
     },
