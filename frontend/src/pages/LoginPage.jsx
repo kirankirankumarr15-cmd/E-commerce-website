@@ -72,9 +72,9 @@ const LoginPage = () => {
       }
 
       toast.success('Welcome back!');
-      navigate(result.role === 'admin' ? '/admin' : '/home');
+      navigate(result?.role === 'admin' ? '/admin' : '/home');
     } catch (err) {
-      toast.error(err.message || 'Login failed. Please check your credentials.');
+      toast.error(err?.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -94,9 +94,9 @@ const LoginPage = () => {
       }
 
       toast.success('Welcome back!');
-      navigate(result.role === 'admin' ? '/admin' : '/home');
+      navigate(result?.role === 'admin' ? '/admin' : '/home');
     } catch (err) {
-      toast.error(err.message || 'Failed to request OTP.');
+      toast.error(err?.message || 'Failed to request OTP.');
     } finally {
       setLoading(false);
     }
@@ -114,9 +114,9 @@ const LoginPage = () => {
     try {
       const verifiedUser = await verifyOtp({ email: otpEmail, otp });
       toast.success('Welcome back!');
-      navigate(verifiedUser.role === 'admin' ? '/admin' : '/home');
+      navigate(verifiedUser?.role === 'admin' ? '/admin' : '/home');
     } catch (err) {
-      toast.error(err.message || 'Invalid or expired OTP.');
+      toast.error(err?.message || 'Invalid or expired OTP.');
     } finally {
       setLoading(false);
     }
@@ -129,10 +129,10 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const result = await login({ email: demoEmail, password: demoPassword });
-      toast.success(`Logged in as ${result.role === 'admin' ? 'Admin' : 'Customer'}!`);
-      navigate(result.role === 'admin' ? '/admin' : '/home');
+      toast.success(`Logged in as ${result?.role === 'admin' ? 'Admin' : 'Customer'}!`);
+      navigate(result?.role === 'admin' ? '/admin' : '/home');
     } catch (err) {
-      toast.error(err.message || 'Demo login failed');
+      toast.error(err?.message || 'Demo login failed');
     } finally {
       setLoading(false);
     }

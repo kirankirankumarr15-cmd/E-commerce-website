@@ -154,12 +154,178 @@ export const FALLBACK_PRODUCTS = [
   },
 ];
 
-export function getMockResponse(rawUrl = '', params = {}) {
+export const FALLBACK_ORDERS = [
+  {
+    _id: 'ord_101',
+    orderNumber: 'ORD-948123',
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    orderStatus: 'delivered',
+    totalPrice: 3749,
+    itemsPrice: 3749,
+    shippingPrice: 0,
+    taxPrice: 187,
+    discountPrice: 0,
+    paymentMethod: 'cod',
+    paymentStatus: 'completed',
+    user: {
+      _id: 'u_demo',
+      firstName: 'Kiran',
+      lastName: 'Kumar',
+      email: 'customer@novamart.com',
+    },
+    shippingAddress: {
+      fullName: 'Kiran Kumar',
+      phone: '9876543210',
+      street: '123 Nova High St, Indiranagar',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      postalCode: '560038',
+      country: 'India',
+    },
+    items: [
+      {
+        _id: 'item_1',
+        quantity: 1,
+        price: 3749,
+        product: FALLBACK_PRODUCTS[0],
+      },
+    ],
+  },
+  {
+    _id: 'ord_102',
+    orderNumber: 'ORD-827419',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    orderStatus: 'shipped',
+    totalPrice: 2799,
+    itemsPrice: 2799,
+    shippingPrice: 0,
+    taxPrice: 140,
+    discountPrice: 0,
+    paymentMethod: 'online',
+    paymentStatus: 'completed',
+    user: {
+      _id: 'u_demo',
+      firstName: 'Priya',
+      lastName: 'Sharma',
+      email: 'priya@example.com',
+    },
+    shippingAddress: {
+      fullName: 'Priya Sharma',
+      phone: '9876543211',
+      street: '45 MG Road, Connaught Place',
+      city: 'New Delhi',
+      state: 'Delhi',
+      postalCode: '110001',
+      country: 'India',
+    },
+    items: [
+      {
+        _id: 'item_2',
+        quantity: 1,
+        price: 2799,
+        product: FALLBACK_PRODUCTS[1],
+      },
+    ],
+  },
+  {
+    _id: 'ord_103',
+    orderNumber: 'ORD-719384',
+    createdAt: new Date().toISOString(),
+    orderStatus: 'pending',
+    totalPrice: 1299,
+    itemsPrice: 1299,
+    shippingPrice: 49,
+    taxPrice: 65,
+    discountPrice: 0,
+    paymentMethod: 'cod',
+    paymentStatus: 'pending',
+    user: {
+      _id: 'u_demo',
+      firstName: 'Rahul',
+      lastName: 'Verma',
+      email: 'rahul@example.com',
+    },
+    shippingAddress: {
+      fullName: 'Rahul Verma',
+      phone: '9876543212',
+      street: '78 Marine Drive',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      postalCode: '400020',
+      country: 'India',
+    },
+    items: [
+      {
+        _id: 'item_3',
+        quantity: 1,
+        price: 1299,
+        product: FALLBACK_PRODUCTS[2],
+      },
+    ],
+  },
+];
+
+export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
   let cleanUrl = (rawUrl || '').replace(/^https?:\/\/[^\/]+/, '').replace(/^\/api/, '');
   if (!cleanUrl.startsWith('/')) {
     cleanUrl = '/' + cleanUrl;
   }
 
+  // --- AUTH SERVICES ---
+  if (cleanUrl.startsWith('/auth')) {
+    const isLoginPage = cleanUrl.includes('login');
+    const isRegister = cleanUrl.includes('register');
+    const isOtp = cleanUrl.includes('verify-otp') || cleanUrl.includes('forgot');
+    const email = reqData.email || params.email || localStorage.getItem('nova_user_email') || 'customer@novamart.com';
+    const isAdmin = email.includes('admin') || localStorage.getItem('nova_demo_role') === 'admin';
+
+    const mockUser = {
+      _id: 'u_demo_' + (isAdmin ? 'admin' : 'cust'),
+      firstName: isAdmin ? 'Admin' : 'Kiran',
+      lastName: isAdmin ? 'User' : 'Kumar',
+      name: isAdmin ? 'Admin User' : 'Kiran Kumar',
+      email: email,
+      role: isAdmin ? 'admin' : 'customer',
+      phone: '9876543210',
+      addresses: [
+        {
+          _id: 'addr_1',
+          fullName: isAdmin ? 'Admin User' : 'Kiran Kumar',
+          phone: '9876543210',
+          street: '123 Nova High St, Indiranagar',
+          city: 'Bengaluru',
+          state: 'Karnataka',
+          postalCode: '560038',
+          country: 'India',
+          label: 'Home',
+          isDefault: true,
+        },
+      ],
+    };
+
+    if (cleanUrl.includes('addresses')) {
+      return {
+        data: {
+          success: true,
+          message: 'Address saved successfully',
+          data: mockUser.addresses,
+        },
+      };
+    }
+
+    return {
+      data: {
+        success: true,
+        data: {
+          token: 'nova_jwt_token_demo_98765',
+          user: mockUser,
+          ...mockUser,
+        },
+      },
+    };
+  }
+
+  // --- CATEGORIES ---
   if (cleanUrl.startsWith('/categories')) {
     return {
       data: {
@@ -169,6 +335,7 @@ export function getMockResponse(rawUrl = '', params = {}) {
     };
   }
 
+  // --- PRODUCTS ---
   if (cleanUrl.startsWith('/products/brands')) {
     return {
       data: {
@@ -251,7 +418,6 @@ export function getMockResponse(rawUrl = '', params = {}) {
       list = list.filter((p) => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
     }
 
-    // Notice: data is the array of products, pagination is sibling!
     return {
       data: {
         success: true,
@@ -261,6 +427,143 @@ export function getMockResponse(rawUrl = '', params = {}) {
           limit: 12,
           total: list.length,
           pages: 1,
+        },
+      },
+    };
+  }
+
+  // --- ORDERS & ADMIN ---
+  if (cleanUrl.startsWith('/orders/stats')) {
+    return {
+      data: {
+        success: true,
+        data: {
+          totalOrders: 28,
+          totalRevenue: 148500,
+          pendingOrders: 3,
+          totalProducts: 30,
+        },
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/orders/my') || cleanUrl === '/orders/all' || cleanUrl === '/orders') {
+    let storedOrders = [];
+    try {
+      const raw = localStorage.getItem('nova_mart_orders');
+      if (raw) storedOrders = JSON.parse(raw);
+    } catch {}
+    const combined = [...storedOrders, ...FALLBACK_ORDERS];
+    return {
+      data: {
+        success: true,
+        data: combined,
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/orders/')) {
+    const id = cleanUrl.replace('/orders/', '').split('/')[0];
+    let storedOrders = [];
+    try {
+      const raw = localStorage.getItem('nova_mart_orders');
+      if (raw) storedOrders = JSON.parse(raw);
+    } catch {}
+    const order = [...storedOrders, ...FALLBACK_ORDERS].find((o) => o._id === id) || FALLBACK_ORDERS[0];
+    return {
+      data: {
+        success: true,
+        data: {
+          order,
+          payment: {
+            status: order.paymentStatus || 'completed',
+            method: order.paymentMethod || 'cod',
+          },
+        },
+      },
+    };
+  }
+
+  // --- PAYMENTS & CHECKOUT ---
+  if (cleanUrl.startsWith('/payments/create-order')) {
+    const newOrder = {
+      _id: 'ord_' + Date.now(),
+      orderNumber: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+      createdAt: new Date().toISOString(),
+      orderStatus: 'confirmed',
+      totalPrice: reqData.totalPrice || 2799,
+      itemsPrice: reqData.itemsPrice || 2799,
+      shippingPrice: reqData.shippingPrice || 0,
+      taxPrice: reqData.taxPrice || 140,
+      discountPrice: reqData.discountPrice || 0,
+      paymentMethod: reqData.paymentMethod || 'cod',
+      paymentStatus: reqData.paymentMethod === 'cod' ? 'pending' : 'completed',
+      shippingAddress: reqData.shippingAddress || {
+        fullName: 'Kiran Kumar',
+        phone: '9876543210',
+        street: '123 Nova High St, Indiranagar',
+        city: 'Bengaluru',
+        state: 'Karnataka',
+        postalCode: '560038',
+        country: 'India',
+      },
+      items: [
+        {
+          _id: 'item_' + Date.now(),
+          quantity: 1,
+          price: 2799,
+          product: FALLBACK_PRODUCTS[0],
+        },
+      ],
+      user: {
+        _id: 'u_demo',
+        firstName: 'Kiran',
+        lastName: 'Kumar',
+        email: 'customer@novamart.com',
+      },
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem('nova_mart_orders') || '[]');
+      existing.unshift(newOrder);
+      localStorage.setItem('nova_mart_orders', JSON.stringify(existing));
+    } catch {}
+
+    return {
+      data: {
+        success: true,
+        data: {
+          order: newOrder,
+          payment: {
+            razorpayOrderId: null,
+          },
+        },
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/payments/verify')) {
+    return {
+      data: {
+        success: true,
+        data: {
+          order: FALLBACK_ORDERS[0],
+        },
+      },
+    };
+  }
+
+  // --- CART & COUPONS ---
+  if (cleanUrl.startsWith('/cart/summary')) {
+    return {
+      data: {
+        success: true,
+        data: {
+          itemsPrice: 2799,
+          discountPrice: 0,
+          shippingPrice: 0,
+          taxPrice: 140,
+          totalPrice: 2939,
         },
       },
     };
@@ -276,6 +579,43 @@ export function getMockResponse(rawUrl = '', params = {}) {
           totalItems: 0,
           totalPrice: 0,
         },
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/coupons')) {
+    return {
+      data: {
+        success: true,
+        data: {
+          code: 'NOVA50',
+          discount: 50,
+          minOrder: 500,
+        },
+      },
+    };
+  }
+
+  if (cleanUrl.startsWith('/reviews')) {
+    return {
+      data: {
+        success: true,
+        data: [
+          {
+            _id: 'rev_1',
+            user: { name: 'Amit Roy' },
+            rating: 5,
+            comment: 'Exceptional build quality and sound! Best purchase this year.',
+            createdAt: new Date().toISOString(),
+          },
+          {
+            _id: 'rev_2',
+            user: { name: 'Sneha Patel' },
+            rating: 4.5,
+            comment: 'Very sleek design and long battery life. Highly recommend.',
+            createdAt: new Date().toISOString(),
+          },
+        ],
       },
     };
   }

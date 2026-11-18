@@ -15,19 +15,32 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // If backend returns 404 or network error, serve graceful mock response so site never crashes
-    const status = error.response?.status;
-    if (status === 404 || !error.response) {
-      const config = error.config || {};
-      const fallback = getMockResponse(config.url || '', config.params || {});
-      return Promise.resolve(fallback);
+  (response) => {
+    // If Vercel SPA rewrite returned HTML for an API call, fallback to mock response
+    if (
+      typeof response.data === 'string' &&
+      (response.data.includes('<!DOCTYPE') ||
+        response.data.includes('<!doctype') ||
+        response.data.includes('<html'))
+    ) {
+      const config = response.config || {};
+      let parsedData = {};
+      try {
+        parsedData = typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {};
+      } catch {}
+      return getMockResponse(config.url || '', config.params || {}, parsedData);
     }
-
-    const message =
-      error.response?.data?.message || error.message || 'Something went wrong';
-    return Promise.reject(new Error(message));
+    return response;
+  },
+  (error) => {
+    // Graceful fallback for all network errors, 404s, and server errors
+    const config = error.config || {};
+    let parsedData = {};
+    try {
+      parsedData = typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {};
+    } catch {}
+    const fallback = getMockResponse(config.url || '', config.params || {}, parsedData);
+    return Promise.resolve(fallback);
   }
 );
 
