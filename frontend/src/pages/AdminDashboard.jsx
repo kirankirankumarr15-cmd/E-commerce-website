@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, Package, ShoppingBag, DollarSign, Clock } from 'lucide-react';
 import Badge from '../components/ui/Badge';
@@ -101,7 +102,11 @@ const AdminDashboard = () => {
                 {orders.map((order) => (
                   <tr key={order._id} className="border-t border-border">
                     <td className="px-6 py-4 font-mono text-xs">{order.orderNumber}</td>
-                    <td className="px-6 py-4">{order.user?.firstName} {order.user?.lastName}</td>
+                    <td className="px-6 py-4">
+                      {order.user?.firstName
+                        ? `${order.user.firstName} ${order.user.lastName || ''}`
+                        : order.shippingAddress?.fullName || 'Customer'}
+                    </td>
                     <td className="px-6 py-4 font-medium">{formatPrice(order.totalPrice)}</td>
                     <td className="px-6 py-4">
                       <Badge variant={order.orderStatus === 'delivered' ? 'success' : order.orderStatus === 'cancelled' ? 'error' : 'warning'}>
@@ -109,15 +114,23 @@ const AdminDashboard = () => {
                       </Badge>
                     </td>
                     <td className="px-6 py-4">
-                      <select
-                        value={order.orderStatus}
-                        onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                        className="text-xs border border-border rounded-lg px-2 py-1"
-                      >
-                        {['pending', 'confirmed', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'].map((s) => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={order.orderStatus}
+                          onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                          className="text-xs border border-border rounded-lg px-2 py-1 bg-white cursor-pointer"
+                        >
+                          {['pending', 'confirmed', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'].map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </select>
+                        <Link
+                          to={`/orders/${order._id}`}
+                          className="text-xs text-primary-600 hover:underline font-semibold"
+                        >
+                          View
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))}

@@ -348,6 +348,11 @@ const Navbar = () => {
                     <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="block py-2 px-2 hover:bg-neutral-100 rounded">
                       Your Account Settings
                     </Link>
+                    {isAdmin && (
+                      <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="block py-2 px-2 hover:bg-neutral-100 rounded font-bold text-[#de7921]">
+                        ⚙️ Admin Dashboard
+                      </Link>
+                    )}
                   </div>
                 </div>
 

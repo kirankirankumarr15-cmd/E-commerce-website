@@ -326,7 +326,20 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
   }
 
   // --- CATEGORIES ---
-  if (cleanUrl.startsWith('/categories')) {
+  if (cleanUrl.startsWith('/categories/')) {
+    const slug = cleanUrl.replace('/categories/', '').split('/')[0];
+    const category =
+      FALLBACK_CATEGORIES.find((c) => c.slug === slug || c._id === slug || c.id === slug) ||
+      FALLBACK_CATEGORIES[0];
+    return {
+      data: {
+        success: true,
+        data: category,
+      },
+    };
+  }
+
+  if (cleanUrl === '/categories' || cleanUrl.startsWith('/categories')) {
     return {
       data: {
         success: true,
@@ -390,6 +403,24 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
     };
   }
 
+  if (cleanUrl.includes('/related')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.slice(0, 4),
+      },
+    };
+  }
+
+  if (cleanUrl.includes('/frequently-bought')) {
+    return {
+      data: {
+        success: true,
+        data: FALLBACK_PRODUCTS.slice(1, 4),
+      },
+    };
+  }
+
   if (cleanUrl.startsWith('/products/slug/')) {
     const slug = cleanUrl.replace('/products/slug/', '').split('/')[0];
     const product = FALLBACK_PRODUCTS.find((p) => p.slug === slug) || FALLBACK_PRODUCTS[0];
@@ -399,6 +430,29 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
         data: product,
       },
     };
+  }
+
+  if (cleanUrl.startsWith('/products/')) {
+    const id = cleanUrl.replace('/products/', '').split('/')[0];
+    if (
+      id !== 'brands' &&
+      id !== 'trending' &&
+      id !== 'best-sellers' &&
+      id !== 'deals' &&
+      id !== 'new-arrivals' &&
+      id !== 'featured' &&
+      id !== 'search'
+    ) {
+      const product =
+        FALLBACK_PRODUCTS.find((p) => p._id === id || p.id === id || p.slug === id) ||
+        FALLBACK_PRODUCTS[0];
+      return {
+        data: {
+          success: true,
+          data: product,
+        },
+      };
+    }
   }
 
   if (cleanUrl.startsWith('/products')) {
@@ -458,6 +512,71 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
       data: {
         success: true,
         data: combined,
+      },
+    };
+  }
+
+  if (cleanUrl.includes('/status')) {
+    const id = cleanUrl.replace('/orders/', '').replace('/status', '').split('/')[0];
+    try {
+      const stored = JSON.parse(localStorage.getItem('nova_mart_orders') || '[]');
+      const updated = stored.map((o) =>
+        o._id === id ? { ...o, orderStatus: reqData.orderStatus || 'confirmed' } : o
+      );
+      localStorage.setItem('nova_mart_orders', JSON.stringify(updated));
+    } catch {}
+    return {
+      data: {
+        success: true,
+        message: 'Order status updated successfully',
+      },
+    };
+  }
+
+  if (cleanUrl.includes('/invoice')) {
+    return {
+      data: {
+        success: true,
+        data: {
+          invoiceNumber: 'INV-' + Math.floor(100000 + Math.random() * 900000),
+          issueDate: new Date().toLocaleDateString('en-IN'),
+          orderNumber: 'ORD-948123',
+          company: 'NOVA MART Retail Ltd',
+          gstin: '29ABCDE1234F1Z5',
+          items: [
+            {
+              name: FALLBACK_PRODUCTS[0].name,
+              qty: 1,
+              price: 3749,
+            },
+          ],
+          total: 3749,
+        },
+      },
+    };
+  }
+
+  if (cleanUrl.includes('/cancel')) {
+    return {
+      data: {
+        success: true,
+        message: 'Order cancelled successfully',
+        data: {
+          ...FALLBACK_ORDERS[0],
+          orderStatus: 'cancelled',
+        },
+      },
+    };
+  }
+
+  if (cleanUrl.includes('/reorder')) {
+    return {
+      data: {
+        success: true,
+        message: 'Items added back to your cart',
+        data: {
+          added: ['item_1'],
+        },
       },
     };
   }
