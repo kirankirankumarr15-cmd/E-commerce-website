@@ -114,46 +114,48 @@ const Navbar = () => {
 
             {/* Account & Lists */}
             {isAuthenticated ? (
-              <Dropdown
-                trigger={
-                  <button className="flex flex-col text-left p-1.5 rounded hover:outline hover:outline-1 hover:outline-white transition-all">
-                    <span className="text-[11px] text-[#cccccc] leading-tight">
-                      Hello, {user?.firstName || user?.name || (user?.email ? user.email.split('@')[0] : 'Customer')}
-                    </span>
-                    <span className="flex items-center gap-0.5 text-xs font-bold text-white leading-tight">
-                      Account & Lists <ChevronDown className="h-3 w-3" />
-                    </span>
-                  </button>
-                }
-              >
-                <div className="px-4 py-2 border-b border-neutral-100 bg-[#f7fafa]">
-                  <p className="text-xs text-neutral-500">Your Account</p>
-                  <p className="text-sm font-bold text-neutral-800">{user?.fullName || user?.firstName}</p>
-                </div>
-                <DropdownItem onClick={() => navigate('/profile')}>
-                  <span className="flex items-center gap-2"><User className="h-4 w-4 text-[#007185]" /> Your Profile & Addresses</span>
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate('/orders')}>
-                  <span className="flex items-center gap-2"><Package className="h-4 w-4 text-[#007185]" /> Your Orders & Tracking</span>
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate('/wishlist')}>
-                  <span className="flex items-center gap-2"><Heart className="h-4 w-4 text-[#007185]" /> Your Wish List ({wishlistCount})</span>
-                </DropdownItem>
-                {isAdmin && (
-                  <DropdownItem onClick={() => navigate('/admin')}>
-                    <span className="flex items-center gap-2"><LayoutDashboard className="h-4 w-4 text-[#de7921]" /> Admin Dashboard</span>
+              <div className="hidden md:block">
+                <Dropdown
+                  trigger={
+                    <button className="flex flex-col text-left p-1.5 rounded hover:outline hover:outline-1 hover:outline-white transition-all">
+                      <span className="text-[11px] text-[#cccccc] leading-tight">
+                        Hello, {user?.firstName || user?.name || (user?.email ? user.email.split('@')[0] : 'Customer')}
+                      </span>
+                      <span className="flex items-center gap-0.5 text-xs font-bold text-white leading-tight">
+                        Account & Lists <ChevronDown className="h-3 w-3" />
+                      </span>
+                    </button>
+                  }
+                >
+                  <div className="px-4 py-2 border-b border-neutral-100 bg-[#f7fafa]">
+                    <p className="text-xs text-neutral-500">Your Account</p>
+                    <p className="text-sm font-bold text-neutral-800">{user?.fullName || user?.firstName}</p>
+                  </div>
+                  <DropdownItem onClick={() => navigate('/profile')}>
+                    <span className="flex items-center gap-2"><User className="h-4 w-4 text-[#007185]" /> Your Profile & Addresses</span>
                   </DropdownItem>
-                )}
-                <div className="border-t border-neutral-200 mt-1 pt-1">
-                  <DropdownItem onClick={handleLogout}>
-                    <span className="flex items-center gap-2 text-[#cc0c39] font-medium"><LogOut className="h-4 w-4" /> Sign Out</span>
+                  <DropdownItem onClick={() => navigate('/orders')}>
+                    <span className="flex items-center gap-2"><Package className="h-4 w-4 text-[#007185]" /> Your Orders & Tracking</span>
                   </DropdownItem>
-                </div>
-              </Dropdown>
+                  <DropdownItem onClick={() => navigate('/wishlist')}>
+                    <span className="flex items-center gap-2"><Heart className="h-4 w-4 text-[#007185]" /> Your Wish List ({wishlistCount})</span>
+                  </DropdownItem>
+                  {isAdmin && (
+                    <DropdownItem onClick={() => navigate('/admin')}>
+                      <span className="flex items-center gap-2"><LayoutDashboard className="h-4 w-4 text-[#de7921]" /> Admin Dashboard</span>
+                    </DropdownItem>
+                  )}
+                  <div className="border-t border-neutral-200 mt-1 pt-1">
+                    <DropdownItem onClick={handleLogout}>
+                      <span className="flex items-center gap-2 text-[#cc0c39] font-medium"><LogOut className="h-4 w-4" /> Sign Out</span>
+                    </DropdownItem>
+                  </div>
+                </Dropdown>
+              </div>
             ) : (
               <Link
                 to="/login"
-                className="flex flex-col text-left p-1.5 rounded hover:outline hover:outline-1 hover:outline-white transition-all"
+                className="hidden md:flex flex-col text-left p-1.5 rounded hover:outline hover:outline-1 hover:outline-white transition-all"
               >
                 <span className="text-[11px] text-[#cccccc] leading-tight">Hello, sign in</span>
                 <span className="flex items-center gap-0.5 text-xs font-bold text-white leading-tight">

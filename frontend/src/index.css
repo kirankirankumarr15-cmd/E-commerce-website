@@ -31,6 +31,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -38,6 +39,7 @@ body {
   color: #0f1111;
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 :focus-visible {

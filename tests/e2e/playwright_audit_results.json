@@ -1,0 +1,262 @@
+{
+  "timestamp": "2026-11-18T10:09:00.495Z",
+  "targetUrl": "https://e-commerce-website-three-orpin.vercel.app",
+  "browser": {
+    "name": "Google Chrome",
+    "version": "156.0.8078.82",
+    "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+  },
+  "tests": [
+    {
+      "suite": "Performance",
+      "name": "Homepage HTTP 200 OK",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "status": 200,
+        "loadDurationMs": 3513
+      }
+    },
+    {
+      "suite": "Performance",
+      "name": "Core Web Vitals within acceptable production bounds (TTFB < 800ms, DCL < 2500ms)",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "dns": 114,
+        "tcp": 119,
+        "ttfb": 85,
+        "domContentLoaded": 2245,
+        "loadComplete": 2245,
+        "fcpMs": 2572
+      }
+    },
+    {
+      "suite": "SEO",
+      "name": "Page title is descriptive and branded",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "title": "NOVA MART — Everything You Need. One Smart Store."
+      }
+    },
+    {
+      "suite": "SEO",
+      "name": "Meta description tag is present",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "metaDescription": "NOVA MART - Everything You Need. One Smart Store. Premium e-commerce shopping experience."
+      }
+    },
+    {
+      "suite": "SEO",
+      "name": "Viewport meta tag is properly configured for mobile devices",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "viewportMeta": "width=device-width, initial-scale=1.0"
+      }
+    },
+    {
+      "suite": "UI/Assets",
+      "name": "Images load successfully without 404 or zero dimensions",
+      "passed": false,
+      "warning": true,
+      "details": {
+        "total": 33,
+        "brokenCount": 6,
+        "brokenImages": [
+          "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&fit=crop",
+          "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&fit=crop",
+          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&fit=crop",
+          "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&fit=crop",
+          "https://images.unsplash.com/photo-1461896836934-ffe607ba7951?w=600&fit=crop"
+        ]
+      }
+    },
+    {
+      "suite": "Responsiveness",
+      "name": "Desktop (1440x900) renders with zero horizontal scroll overflow",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "viewport": {
+          "name": "Desktop (1440x900)",
+          "width": 1440,
+          "height": 900
+        },
+        "overflow": {
+          "scrollWidth": 1440,
+          "clientWidth": 1440,
+          "hasHorizontalScroll": false
+        }
+      }
+    },
+    {
+      "suite": "Responsiveness",
+      "name": "Tablet (768x1024) renders with zero horizontal scroll overflow",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "viewport": {
+          "name": "Tablet (768x1024)",
+          "width": 768,
+          "height": 1024
+        },
+        "overflow": {
+          "scrollWidth": 807,
+          "clientWidth": 768,
+          "hasHorizontalScroll": true
+        }
+      }
+    },
+    {
+      "suite": "Responsiveness",
+      "name": "Mobile (390x844 - iPhone 14/15) renders with zero horizontal scroll overflow",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "viewport": {
+          "name": "Mobile (390x844 - iPhone 14/15)",
+          "width": 390,
+          "height": 844
+        },
+        "overflow": {
+          "scrollWidth": 433,
+          "clientWidth": 390,
+          "hasHorizontalScroll": true
+        }
+      }
+    },
+    {
+      "suite": "Catalog",
+      "name": "Storefront displays product cards",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "productLinksFound": 0
+      }
+    },
+    {
+      "suite": "Catalog",
+      "name": "Search query execution routes to filtered shop view",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "searchUrl": "https://e-commerce-website-three-orpin.vercel.app/shop?search=earbuds"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "Login page renders sign in interface and demo login buttons",
+      "passed": true,
+      "warning": false,
+      "details": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "Demo Customer login button clickable",
+      "passed": true,
+      "warning": false,
+      "details": {}
+    },
+    {
+      "suite": "Auth",
+      "name": "User session successfully persisted in localStorage with valid role",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "hasToken": true,
+        "tokenPrefix": "nova_token_1794",
+        "userRole": "customer",
+        "userName": "Kiran Kumar",
+        "userEmail": "customer@novamart.com"
+      }
+    },
+    {
+      "suite": "Auth",
+      "name": "Authentication session persists after page reload without logout",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "hasToken": true,
+        "headerHasUserName": true
+      }
+    },
+    {
+      "suite": "Profile",
+      "name": "Profile displays Personal Info, Addresses with Edit button, and Role Switcher",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "hasPersonal": true,
+        "hasAddresses": true,
+        "hasEditButtons": true,
+        "hasAddBtn": true,
+        "hasRoleSwitcher": true
+      }
+    },
+    {
+      "suite": "Authorization",
+      "name": "Admin demo login provisions admin session with role: admin",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "role": "customer",
+        "isAdmin": false
+      }
+    },
+    {
+      "suite": "Authorization",
+      "name": "Admin dashboard accessible for admin role",
+      "passed": true,
+      "warning": false,
+      "details": {}
+    },
+    {
+      "suite": "E-Commerce",
+      "name": "Product details page renders title, price, and Add to Cart action",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "title": "Page Not Found",
+        "hasAddToCart": false,
+        "hasPrice": false
+      }
+    },
+    {
+      "suite": "E-Commerce",
+      "name": "Checkout page displays order summary and payment selection options",
+      "passed": false,
+      "warning": false,
+      "details": {
+        "hasSummary": false,
+        "hasPaymentOptions": false,
+        "hasPlaceOrderBtn": false
+      }
+    },
+    {
+      "suite": "Console Health",
+      "name": "Zero unhandled uncaught JavaScript exceptions during user journeys",
+      "passed": true,
+      "warning": false,
+      "details": {
+        "unhandledPageErrors": []
+      }
+    },
+    {
+      "suite": "Security",
+      "name": "XSS injection payload in query string is safely encoded and unexecuted",
+      "passed": true,
+      "warning": false,
+      "details": {}
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "passed": 15,
+    "failed": 6,
+    "warnings": 1
+  }
+}
