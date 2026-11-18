@@ -260,7 +260,11 @@ const Navbar = () => {
             >
               {/* Header */}
               <div className="bg-[#232f3e] text-white p-4 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-3">
+                <Link
+                  to={isAuthenticated ? '/profile' : '/login'}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 hover:opacity-90"
+                >
                   <div className="w-8 h-8 rounded-full bg-[#131921] flex items-center justify-center border border-[#febd69]">
                     <User className="h-5 w-5 text-[#febd69]" />
                   </div>
@@ -268,7 +272,7 @@ const Navbar = () => {
                     <span className="text-xs text-[#cccccc] block">Hello,</span>
                     <span className="text-base font-bold block">{user?.firstName ? user.firstName : 'Sign in'}</span>
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-1 rounded hover:bg-[#37475a]"
