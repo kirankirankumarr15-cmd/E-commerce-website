@@ -14,10 +14,12 @@ import {
   ExternalLink,
   User,
   Check,
+  ShieldAlert,
 } from "lucide-react";
 import { authHeader } from "@/lib/supabaseBrowser";
 import { getAllOrders, updateOrderStatus, ScheduledOrder } from "@/lib/orders";
 import { fmtTime, fmtDate, istDate } from "@/lib/config";
+import { useAuth } from "@/lib/authContext";
 
 type Drop = {
   id: string;
@@ -33,6 +35,9 @@ type Drop = {
 };
 
 export default function DeliveryPartnerPage() {
+  const { user, loading: authLoading, loginDemo } = useAuth();
+
+  // All hooks must come BEFORE any conditional return (Rules of Hooks)
   const [drops, setDrops] = useState<Drop[]>([]);
   const [partnerName, setPartnerName] = useState("Rajesh Kumar (Partner)");
   const [error, setError] = useState("");
@@ -100,6 +105,32 @@ export default function DeliveryPartnerPage() {
     }, 1000);
     return () => clearInterval(timer);
   }, [load]);
+
+  // Auth guard: show login prompt AFTER all hooks (Rules of Hooks compliance)
+  if (!authLoading && (!user || (user.role !== "partner" && user.role !== "admin"))) {
+    return (
+      <div className="min-h-screen bg-[#eaeded] flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl p-8 shadow-sm text-center max-w-md w-full space-y-4">
+          <ShieldAlert className="h-10 w-10 text-amber-500 mx-auto" />
+          <h1 className="text-lg font-bold text-gray-900">Delivery Partner Portal</h1>
+          <p className="text-xs text-gray-500">
+            This portal is restricted to verified Nova Mart delivery partners.
+          </p>
+          <div className="pt-2 space-y-2">
+            <button
+              onClick={() => loginDemo("partner")}
+              className="w-full rounded-full bg-[#ffd814] py-2.5 text-sm font-bold text-gray-900 hover:bg-yellow-400"
+            >
+              Continue as Demo Partner
+            </button>
+            <Link href="/" className="block text-xs text-[#007185] hover:underline mt-2">
+              ← Back to Nova Mart Store
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   async function act(id: string, action: "start" | "deliver" | "unavailable") {
     setBusy(id);

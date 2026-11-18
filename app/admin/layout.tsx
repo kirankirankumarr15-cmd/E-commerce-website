@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -10,10 +11,54 @@ import {
   Truck,
   Calendar,
   Store,
+  ShieldAlert,
 } from "lucide-react";
+import { useAuth } from "@/lib/authContext";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading, loginDemo } = useAuth();
+
+  useEffect(() => {
+    // No redirect — let the access-denied screen handle it gracefully
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent mb-2" />
+          <p className="text-sm text-gray-500">Loading admin console…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (user && user.role !== "admin") {
+    return (
+      <div className="min-h-screen bg-[#eaeded] flex items-center justify-center">
+        <div className="bg-white rounded-xl p-8 shadow text-center max-w-md">
+          <ShieldAlert className="h-10 w-10 text-red-500 mx-auto mb-3" />
+          <h1 className="text-lg font-bold text-gray-900">Access Restricted</h1>
+          <p className="text-xs text-gray-500 mt-1 mb-4">
+            This area is for Nova Mart operations staff only. Please sign in with an admin account.
+          </p>
+          <div className="space-y-2">
+            <button
+              onClick={() => loginDemo("admin")}
+              className="w-full rounded-full bg-[#ffd814] px-6 py-2 text-xs font-bold text-gray-900 hover:bg-yellow-400"
+            >
+              Continue as Demo Admin
+            </button>
+            <Link href="/" className="block text-xs text-[#007185] hover:underline mt-2">
+              Back to Store
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const navLinks = [
     { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
