@@ -118,7 +118,7 @@ const Navbar = () => {
                 trigger={
                   <button className="flex flex-col text-left p-1.5 rounded hover:outline hover:outline-1 hover:outline-white transition-all">
                     <span className="text-[11px] text-[#cccccc] leading-tight">
-                      Hello, {user?.firstName}
+                      Hello, {user?.firstName || user?.name || (user?.email ? user.email.split('@')[0] : 'Customer')}
                     </span>
                     <span className="flex items-center gap-0.5 text-xs font-bold text-white leading-tight">
                       Account & Lists <ChevronDown className="h-3 w-3" />
@@ -269,8 +269,14 @@ const Navbar = () => {
                     <User className="h-5 w-5 text-[#febd69]" />
                   </div>
                   <div>
-                    <span className="text-xs text-[#cccccc] block">Hello,</span>
-                    <span className="text-base font-bold block">{user?.firstName ? user.firstName : 'Sign in'}</span>
+                    <span className="text-xs text-[#cccccc] block">
+                      {isAuthenticated ? 'Hello,' : 'Welcome'}
+                    </span>
+                    <span className="text-base font-bold block">
+                      {isAuthenticated
+                        ? (user?.firstName || user?.name || (user?.email ? user.email.split('@')[0] : 'Customer'))
+                        : 'Sign in'}
+                    </span>
                   </div>
                 </Link>
                 <button

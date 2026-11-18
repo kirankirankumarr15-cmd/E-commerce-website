@@ -124,7 +124,7 @@ const ProfilePage = () => {
       toast.success('Address updated successfully!');
     } else {
       const newAddr = {
-        _id: 'addr_' + Date.now(),
+        _id: 'addr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
         ...addressFormData,
       };
       if (addressFormData.isDefault) {

@@ -265,6 +265,27 @@ export const FALLBACK_ORDERS = [
   },
 ];
 
+const memoryStore = {};
+const safeStorage = {
+  getItem: (k) => {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const val = localStorage.getItem(k);
+        if (val !== null) return val;
+      }
+    } catch {}
+    return memoryStore[k] || null;
+  },
+  setItem: (k, v) => {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(k, v);
+      }
+    } catch {}
+    memoryStore[k] = String(v);
+  },
+};
+
 export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
   let cleanUrl = (rawUrl || '').replace(/^https?:\/\/[^\/]+/, '').replace(/^\/api/, '');
   if (!cleanUrl.startsWith('/')) {
@@ -276,17 +297,21 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
     const isLoginPage = cleanUrl.includes('login');
     const isRegister = cleanUrl.includes('register');
     const isOtp = cleanUrl.includes('verify-otp') || cleanUrl.includes('forgot');
-    const email = reqData.email || params.email || localStorage.getItem('nova_user_email') || 'customer@novamart.com';
-    const isAdmin = email.includes('admin') || localStorage.getItem('nova_demo_role') === 'admin';
+    const email = reqData.email || params.email || safeStorage.getItem('nova_user_email') || 'customer@novamart.com';
+    const isAdmin = email.includes('admin') || safeStorage.getItem('nova_demo_role') === 'admin';
+    const firstName = reqData.firstName || (isAdmin ? 'Admin' : 'Kiran');
+    const lastName = reqData.lastName || (isAdmin ? 'User' : 'Kumar');
+    const fullName = reqData.name || `${firstName} ${lastName}`.trim();
+    const phone = reqData.phone || '9876543210';
 
     const mockUser = {
       _id: 'u_demo_' + (isAdmin ? 'admin' : 'cust'),
-      firstName: isAdmin ? 'Admin' : 'Kiran',
-      lastName: isAdmin ? 'User' : 'Kumar',
-      name: isAdmin ? 'Admin User' : 'Kiran Kumar',
+      firstName: firstName,
+      lastName: lastName,
+      name: fullName,
       email: email,
       role: isAdmin ? 'admin' : 'customer',
-      phone: '9876543210',
+      phone: phone,
       addresses: [
         {
           _id: 'addr_1',
@@ -504,7 +529,7 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
   if (cleanUrl.startsWith('/orders/my') || cleanUrl === '/orders/all' || cleanUrl === '/orders') {
     let storedOrders = [];
     try {
-      const raw = localStorage.getItem('nova_mart_orders');
+      const raw = safeStorage.getItem('nova_mart_orders');
       if (raw) storedOrders = JSON.parse(raw);
     } catch {}
     const combined = [...storedOrders, ...FALLBACK_ORDERS];
@@ -519,11 +544,11 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
   if (cleanUrl.includes('/status')) {
     const id = cleanUrl.replace('/orders/', '').replace('/status', '').split('/')[0];
     try {
-      const stored = JSON.parse(localStorage.getItem('nova_mart_orders') || '[]');
+      const stored = JSON.parse(safeStorage.getItem('nova_mart_orders') || '[]');
       const updated = stored.map((o) =>
         o._id === id ? { ...o, orderStatus: reqData.orderStatus || 'confirmed' } : o
       );
-      localStorage.setItem('nova_mart_orders', JSON.stringify(updated));
+      safeStorage.setItem('nova_mart_orders', JSON.stringify(updated));
     } catch {}
     return {
       data: {
@@ -585,7 +610,7 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
     const id = cleanUrl.replace('/orders/', '').split('/')[0];
     let storedOrders = [];
     try {
-      const raw = localStorage.getItem('nova_mart_orders');
+      const raw = safeStorage.getItem('nova_mart_orders');
       if (raw) storedOrders = JSON.parse(raw);
     } catch {}
     const order = [...storedOrders, ...FALLBACK_ORDERS].find((o) => o._id === id) || FALLBACK_ORDERS[0];
@@ -643,9 +668,9 @@ export function getMockResponse(rawUrl = '', params = {}, reqData = {}) {
     };
 
     try {
-      const existing = JSON.parse(localStorage.getItem('nova_mart_orders') || '[]');
+      const existing = JSON.parse(safeStorage.getItem('nova_mart_orders') || '[]');
       existing.unshift(newOrder);
-      localStorage.setItem('nova_mart_orders', JSON.stringify(existing));
+      safeStorage.setItem('nova_mart_orders', JSON.stringify(existing));
     } catch {}
 
     return {
